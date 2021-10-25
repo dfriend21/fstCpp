@@ -168,9 +168,6 @@ List wcCpp(const IntegerMatrix als, const IntegerVector pop) {
 
 
 
-// 
-// 
-// // [[Rcpp::export]]
 // List wcCpp(const IntegerMatrix als, const IntegerVector pop) {
 //   // get the size of each population
 //   //Rcout << "check1\n";
