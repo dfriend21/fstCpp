@@ -1,3 +1,5 @@
 useDynLib(fstCpp, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+importFrom(adegenet, ploidy)
+importFrom(adegenet, genind2df)
 exportPattern("^[[:alpha:]]+")
