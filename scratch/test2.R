@@ -17,6 +17,7 @@ wc_cpp
 ###########################################
 # check if results match other packages
 ###########################################
+zero_est <- 1e-10
 
 gen <- nancycats
 loc <- as.loci(gen)
@@ -32,24 +33,25 @@ ag_ov <- c(Ho = mean(ag_sm$Hobs), Hs = mean(ag_sm$Hexp))
 hf_ov[1:2]
 ag_ov
 wc_cpp$stats[1:2]
-ag_ov - wc_cpp$stats[1:2]
-
+dif_ov <- ag_ov - wc_cpp$stats[1:2]
+abs(dif_ov) < zero_est
 
 # F-stats
 hf_wc <- wc(gen)
 hf_wc
 wc_cpp$stats[4:5]
-c(hf_wc$FST, hf_wc$FIS) - wc_cpp$stats[4:5]
-
-
+dif_wc <- c(hf_wc$FST, hf_wc$FIS) - wc_cpp$stats[4:5]
+dif_wc
+abs(wc_dif) < zero_est
 #---- loci stats
 
 # number of alleles
 ag_sm <- summary(gen)
 ag_sm$loc.n.all
 wc_cpp$loci_stat[,"N_al"]
-ag_sm$loc.n.all - wc_cpp$loci_stat[,"N_al"]
-
+dif_n_al <- ag_sm$loc.n.all - wc_cpp$loci_stat[,"N_al"]
+dif_n_al
+abs(dif_n_al) < zero_est
 
 # Ho and Hs
 hf_bs <- basic.stats(gen)$perloc
@@ -57,29 +59,33 @@ ag_sm <- summary(gen)
 pp_h <- locus_table(gen)
 
 hf_bs[,c("Ho", "Hs")]
-cbind(ag_sm$Hobs, ag_sm$Hexp)
+ag_h <- cbind(ag_sm$Hobs, ag_sm$Hexp)
+ag_h
 wc_cpp$loci_stats[,c("Ho", "Hs")]
+dif_h <- ag_h - wc_cpp$loci_stats[,c("Ho", "Hs")]
+abs(dif_h) < zero_est
 
-cbind(ag_sm$Hobs, ag_sm$Hexp) - wc_cpp$loci_stats[,c("Ho", "Hs")]
 cbind(wc_cpp$loci_stats[,"Hs"], pp_h[,"Hexp"])
 
-# F-stats
+# F-stats by locus
 pg_fst <- Fst(loc)
 pg_fst
 wc_cpp$loci_stats[,c("Fit", "Fst", "Fis")]
-pg_fst - wc_cpp$loci_stats[,c("Fit", "Fst", "Fis")]
+dif_fst <- pg_fst - wc_cpp$loci_stats[,c("Fit", "Fst", "Fis")]
+dif_fst
+abs(dif_fst) < zero_est
 
 #---- pw Fst
-
 rn <- rownames(wc_cpp$pop_stats)
 m <- function(vals) match(names(vals), rn)
 
 hf_pw <- pairwise.WCfst(hf)
 hf_pw[m(hf_pw[,1]), m(hf_pw[1,])]
 wc_cpp$pw_fst
-dif <- hf_pw[m(hf_pw[,1]), m(hf_pw[1,])] - wc_cpp$pw_fst
-dif
-abs(dif) > 1e-10
+dif_pw <- hf_pw[m(hf_pw[,1]), m(hf_pw[1,])] - wc_cpp$pw_fst
+dif_pw
+abs(dif_pw) < zero_est
+
 #---- population stats
 
 rn <- rownames(wc_cpp$pop_stats)
@@ -93,8 +99,8 @@ ag_ho <- do.call("c", lapply(n.pop, function(x) mean(summary(x)$Hobs)))
 hf_ho[m(hf_ho)]
 ag_ho[m(ag_ho)]
 wc_cpp$pop_stats[, "Ho"]
-ag_ho[m(ag_ho)] - wc_cpp$pop_stats[, "Ho"]
-
+dif_ho <- ag_ho[m(ag_ho)] - wc_cpp$pop_stats[, "Ho"]
+abs(dif_ho) < zero_est
 
 # Hs/He
 hf_hs <- hierfstat::Hs(gen)
@@ -103,10 +109,9 @@ ag_hs <- adegenet::Hs(gen)
 hf_hs[m(hf_hs)]
 ag_hs[m(hf_hs)]
 wc_cpp$pop_stats[, "Hs"]
-ag_hs[m(hf_hs)] - wc_cpp$pop_stats[, "Hs"]
-
-
-
+dif_hs <- ag_hs[m(hf_hs)] - wc_cpp$pop_stats[, "Hs"]
+dif_hs
+abs(dif_hs) < zero_est
 
 ###########################################
 # benchmark

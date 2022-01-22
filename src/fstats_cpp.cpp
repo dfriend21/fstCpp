@@ -3,7 +3,7 @@
 #include <vector>
 
 using namespace Rcpp;
-
+ 
 // factorial
 long int fact(int n){
   long int prod = 1;
@@ -61,7 +61,7 @@ NumericVector getAbc(const NumericMatrix &p_mat, const NumericMatrix &het_mat, c
     non_zero_cols[i] = n_i[cols[i]] != 0;
   }
   IntegerVector cols2 = cols[non_zero_cols];
-  if(cols2.length() < 2){
+  if(cols2.length() < 1){
     return NumericVector::create(NA_REAL, NA_REAL, NA_REAL);
   }
   
@@ -270,7 +270,8 @@ List wcCpp(const IntegerMatrix als, const IntegerVector pop) {
     // pop_ho(i/2, _) = het_n_pop / n_i;
     pop_ho(i/2, _) = het_n_pop / n_rows_pop;
     for(int j = 0; j < p_mat.ncol(); ++j){
-      pop_hs(i/2, j) = 1 - sum(pow(p_mat(_, j), 2));
+      // pop_hs(i/2, j) = 1 - sum(pow(p_mat(_, j), 2));
+      pop_hs(i/2, j) = 1 - sum(na_omit(pow(p_mat(_, j), 2)));
     }
   }
   
@@ -282,7 +283,7 @@ List wcCpp(const IntegerMatrix als, const IntegerVector pop) {
   }
   // NumericMatrix f_loc(als.ncol()/2, 3);
   // colnames(f_loc) = Rcpp::CharacterVector({"Fit","Fst","Fis"}); //name the columns
-  Rcout << abc_mat << "\n";
+  // Rcout << abc_mat << "\n";
   loci_stats(_, 3) = 1 - (abc_mat(_,2) / (abc_mat(_,0) + abc_mat(_,1) + abc_mat(_,2)));
   loci_stats(_, 4) = abc_mat(_,0) / (abc_mat(_,0) + abc_mat(_,1) + abc_mat(_,2));
   loci_stats(_, 5) = 1 - (abc_mat(_,2) / (abc_mat(_,1) + abc_mat(_,2)));
