@@ -15,6 +15,7 @@ gen_stats <- function(gen, pop = NULL){
   
   rownames(stats$pw_fst) <- levels(pop)[match(rownames(stats$pw_fst), 1:nlevels(pop))]
   colnames(stats$pw_fst) <- levels(pop)[match(colnames(stats$pw_fst), 1:nlevels(pop))]
+  diag(stats$pw_fst) <- NA
   rownames(stats$pop_stats) <- levels(pop)[match(rownames(stats$pop_stats), 1:nlevels(pop))]
   
   return(stats)

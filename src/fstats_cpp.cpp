@@ -23,7 +23,7 @@ long int fact(int n){
 // }
 
 // function choose(n, k)
-//   if k == 0 return 1
+//   if k == 0 return 1 
 //   return (n * choose(n - 1, k - 1)) / k
 
 unsigned choose( unsigned n, unsigned k )
